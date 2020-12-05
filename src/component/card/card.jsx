@@ -40,10 +40,10 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function CardBlog() {
+export default function CardBlog(props) {
   const classes = useStyles();
   const [expanded, setExpanded] = React.useState(false);
-
+  console.log(props);
   const handleExpandClick = () => {
     setExpanded(!expanded);
   };
@@ -61,7 +61,7 @@ export default function CardBlog() {
             <MoreVertIcon />
           </IconButton>
         }
-        title="Shrimp and Chorizo Paella"
+        title={props.texts.postStatus}
         subheader="September 14, 2016"
       />
       <CardMedia

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useCallback } from 'react';
 import clsx from 'clsx';
 import { makeStyles, fade, useTheme } from '@material-ui/core/styles';
 import Drawer from '@material-ui/core/Drawer';
@@ -21,11 +21,11 @@ import SearchIcon from '@material-ui/icons/Search';
 import InputBase from '@material-ui/core/InputBase';
 import Badge from '@material-ui/core/Badge';
 import NotificationsIcon from '@material-ui/icons/Notifications';
-import MoreIcon from '@material-ui/icons/MoreVert';
 import AccountCircle from '@material-ui/icons/AccountCircle';
-import { Container } from '@material-ui/core';
+import { Card, Container } from '@material-ui/core';
 import CardBlog from '../../component/card';
 import Modal from '../../component/modal';
+import PostService from '../../services/post-service';
 
 
 const drawerWidth = 240;
@@ -144,11 +144,13 @@ export default function Main() {
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [enable, setEnabled] = React.useState(false);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
+  const [posts, setPosts] = React.useState([]);
   const [open, setOpen] = React.useState(false);
-
+  const postService = new PostService();
 
   const openModal = () => {
     setEnabled(true);
+
   }
 
   const closeModal = () => {
@@ -169,6 +171,15 @@ export default function Main() {
   const handleDrawerClose = () => {
     setOpen(false);
   };
+
+  useEffect(() => {
+    const fetchData = async () => {
+      let fetchPosts = await postService.getPost();
+      setPosts(fetchPosts);
+    }
+  
+    fetchData();
+  }, []);
 
   return (
     <div className={classes.root}>
@@ -275,18 +286,14 @@ export default function Main() {
       <div className={classes.toolbar} />
         <Container fixed>
             <Modal opens = {enable} closes = {closeModal}/>
-            <CardBlog />
-            <div className={classes.mergeCard} />
-            <CardBlog />
-            <div className={classes.mergeCard} />
-            <CardBlog />
-            <div className={classes.mergeCard} />
-            <CardBlog />
-            <div className={classes.mergeCard} />
-            <CardBlog />
-            <div className={classes.mergeCard} />
-            <CardBlog />
-            <div className={classes.mergeCard} />
+            {posts.map((item, key) => {
+              return(
+                <React.Fragment key={key}>
+                  <CardBlog texts = {item}/>
+                  <div className={classes.mergeCard} />
+                </React.Fragment>
+              )
+            })}
         </Container>
       </main>
     </div>
