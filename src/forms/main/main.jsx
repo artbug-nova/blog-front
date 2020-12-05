@@ -25,6 +25,7 @@ import MoreIcon from '@material-ui/icons/MoreVert';
 import AccountCircle from '@material-ui/icons/AccountCircle';
 import { Container } from '@material-ui/core';
 import CardBlog from '../../component/card';
+import Modal from '../../component/modal';
 
 
 const drawerWidth = 240;
@@ -141,8 +142,18 @@ export default function Main() {
   const classes = useStyles();
   const theme = useTheme();
   const [anchorEl, setAnchorEl] = React.useState(null);
+  const [enable, setEnabled] = React.useState(false);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
   const [open, setOpen] = React.useState(false);
+
+
+  const openModal = () => {
+    setEnabled(true);
+  }
+
+  const closeModal = () => {
+    setEnabled(false);
+  }
 
   const handleMobileMenuOpen = (event) => {
     setMobileMoreAnchorEl(event.currentTarget);
@@ -184,6 +195,7 @@ export default function Main() {
           <Typography variant="h6" noWrap>
             Internet Blog
           </Typography>
+          <div className={classes.grow} />
           <div className={classes.search}>
             <div className={classes.searchIcon}>
               <SearchIcon />
@@ -197,9 +209,8 @@ export default function Main() {
               inputProps={{ 'aria-label': 'search' }}
             />
           </div>
-          <div className={classes.grow} />
           <div className={classes.sectionDesktop}>
-            <IconButton aria-label="show 4 new mails" color="inherit">
+            <IconButton aria-label="show 4 new mails" color="inherit" onClick={() => openModal()}>
               <Badge badgeContent={4} color="secondary">
                 <MailIcon />
               </Badge>
@@ -244,7 +255,7 @@ export default function Main() {
         <Divider />
         <List>
           {['Main page', 'Starred', 'Send email', 'Drafts'].map((text, index) => (
-            <ListItem button key={text}>
+            <ListItem button key={text} >
               <ListItemIcon>{index % 2 === 0 ? <InboxIcon /> : <MailIcon />}</ListItemIcon>
               <ListItemText primary={text} />
             </ListItem>
@@ -263,6 +274,7 @@ export default function Main() {
       <main className={classes.content}>
       <div className={classes.toolbar} />
         <Container fixed>
+            <Modal opens = {enable} closes = {closeModal}/>
             <CardBlog />
             <div className={classes.mergeCard} />
             <CardBlog />
